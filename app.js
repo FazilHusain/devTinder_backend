@@ -8,8 +8,12 @@ import authRouter from "./src/routes/auth.js";
 import profileRouter from "./src/routes/profile.js";
 import requestRouter from "./src/routes/request.js";
 import userRouter from "./src/routes/user.js";
+import startCronJob from "./src/utils/cronjob.js";
+import paymentRouter from "./src/routes/payment.js";
 
 dotenv.config();
+
+startCronJob();
 
 const app = express();
 
@@ -30,6 +34,7 @@ app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
+app.use("/", paymentRouter);
 
 
 const port = 3000;
