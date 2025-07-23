@@ -39,15 +39,18 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       .populate("fromUserId", USER_SAFE_DATA)
       .populate("toUserId", USER_SAFE_DATA);
 
-    const data = connectionRequests.map((row) => {
-      if (row.fromUserId.toString() === loggedInUser._id.toString()) {
-        return row.toUserId;
-      }
-      return row.fromUserId;
-    });
+    const data = connectionRequests
+      .map((row) => {
+        const from = row.fromUserId;
+        const to = row.toUserId;
+        if (!from || !to) return null;
+        return from._id.toString() === loggedInUser._id.toString() ? to : from;
+      })
+      .filter(Boolean);
+      
     res.json({ data });
   } catch (error) {
-    req.status(400).send("ERROR: " + error.message);
+    res.status(400).send("ERROR: " + error.message);
   }
 });
 

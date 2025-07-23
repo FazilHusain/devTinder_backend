@@ -10,6 +10,9 @@ import requestRouter from "./src/routes/request.js";
 import userRouter from "./src/routes/user.js";
 import startCronJob from "./src/utils/cronjob.js";
 import paymentRouter from "./src/routes/payment.js";
+import http from "http";
+import initializeSocket from "./src/utils/socket.js";
+import chatRouter from "./src/routes/chat.js";
 
 dotenv.config();
 
@@ -35,14 +38,18 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 app.use("/", paymentRouter);
-
+app.use("/" , chatRouter)
 
 const port = 3000;
+
+const server = http.createServer(app);
+
+initializeSocket(server)
 
 connectDb()
   .then(() => {
     console.log("MongoDB Connected Succesfully");
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log(`Server is running on ${port}`);
     });
   })
